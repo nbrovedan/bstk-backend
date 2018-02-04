@@ -3,7 +3,7 @@
 # 
 # Copyright (c) 2017 Oracle and/or its affiliates. All rights reserved.
 if [[ -z $ADMIN_PASSWORD ]]; then
-	ADMIN_PASSWORD="admin"
+	ADMIN_PASSWORD=$(date| md5sum | fold -w 8 | head -n 1)
 	echo "##########GENERATED ADMIN PASSWORD: $ADMIN_PASSWORD  ##########"
 fi
 echo "AS_ADMIN_PASSWORD=" > /tmp/glassfishpwd
@@ -13,9 +13,9 @@ asadmin start-domain
 echo "AS_ADMIN_PASSWORD=${ADMIN_PASSWORD}" > /tmp/glassfishpwd
 asadmin --user=admin --passwordfile=/tmp/glassfishpwd enable-secure-admin
 echo "########## DEPLOYMENT ###########"
-cp ./bstk-backend.war /glassfish4/glassfish/domains/domain1/applications/
-asadmin --user=admin --passwordfile=/tmp/glassfishpwd deploy ./glassfish4/glassfish/domains/domain1/applications/bstk-backend.war
+asadmin --user=admin --passwordfile=/tmp/glassfishpwd deploy ./target/bstk-backend.war
 rm -f ./bstk-backend.war
+rm -f ./api.war
 asadmin --user=admin stop-domain
 rm /tmp/glassfishpwd
 exec "$@"

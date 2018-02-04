@@ -1,3 +1,4 @@
+
 # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
 # 
 # Copyright (c) 2017 Oracle and/or its affiliates. All rights reserved.
@@ -6,14 +7,13 @@
 FROM nbrovedan/bstk-backend
 
 # Maintainer
-MAINTAINER Arindam Bandyopadhyay<arindam.bandyopadhyay@oracle.com>
+MAINTAINER Naidion Brovedan<brovedan@gmail.com>
 
 # Set environment variables and default password for user 'admin'
-ENV PATH=$PATH:/glassfish4/bin \
+ENV PATH=$PATH:/glassfish5/bin \
     JAVA_HOME=/usr/lib/jvm/java-openjdk
 
 COPY docker-entrypoint.sh /entrypoint.sh
-COPY ./target/bstk-backend.war ./
 ENTRYPOINT ["/entrypoint.sh"]
 
 # Ports being exposed
