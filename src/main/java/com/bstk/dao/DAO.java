@@ -9,9 +9,9 @@ public abstract class DAO {
 	 * Método para retornar uma entity
 	 * @return EntityManager
 	 */
+	private static EntityManagerFactory factory = Persistence.createEntityManagerFactory("bstk");
+	
 	protected final EntityManager getEntityManager() {
-		EntityManagerFactory factory = null;
-	    factory = Persistence.createEntityManagerFactory("bstk");
     		return factory.createEntityManager();
 	}
 }

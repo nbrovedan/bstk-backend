@@ -3,6 +3,8 @@ package com.bstk.dao;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.validation.ValidationException;
+
 import com.bstk.models.Pessoa;
 
 public class PessoaDAO extends DAO {
@@ -11,7 +13,7 @@ public class PessoaDAO extends DAO {
 	 * Salvar pessoa
 	 * @param pessoa
 	 */
-	public void salvar(Pessoa pessoa) {
+	public void save(Pessoa pessoa) throws ValidationException{
 		//Pega um entity
 		EntityManager em = getEntityManager();
 		//salva um novo caso não exista ou atualiza
@@ -23,26 +25,42 @@ public class PessoaDAO extends DAO {
 				em.merge(pessoa);
 			}
 			em.getTransaction().commit();
-		} catch (Exception e) {
-			em.getTransaction().rollback();
+		} finally {
+			if(em.getTransaction().isActive()) {
+				em.getTransaction().rollback();
+			}
+			em.close();
 		}
 	}
 	@SuppressWarnings("unchecked")
 	public List<Pessoa> getPessoas(){
 		EntityManager em = getEntityManager();
-		return em.createQuery("from Pessoa").getResultList();
+		try {
+			return em.createQuery("from Pessoa").getResultList();
+		} finally {
+			em.close();
+		}
+		
 	}
 	
 	public Pessoa getPessoa(int id){
 		EntityManager em = getEntityManager();
-		return em.find(Pessoa.class, id);
+		try {
+			return em.find(Pessoa.class, id);
+		} finally {
+			em.close();
+		}
 	}
 	
-	public void remover(int id) {
+	public void remove(int id) {
 		EntityManager em = getEntityManager();
-		Pessoa pessoa = em.find(Pessoa.class, id);
-		em.getTransaction().begin();
-		em.remove(pessoa);
-		em.getTransaction().commit();
+		try {
+			Pessoa pessoa = em.find(Pessoa.class, id);
+			em.getTransaction().begin();
+			em.remove(pessoa);
+			em.getTransaction().commit();
+		} finally {
+			em.close();
+		}
 	}
 }

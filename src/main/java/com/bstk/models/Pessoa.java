@@ -1,22 +1,32 @@
 package com.bstk.models;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name="pessoa")
-public class Pessoa {
+public class Pessoa implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue
 	private int id;
-	@Column
+	@Column(length=150)
+	@Size(min=3, max=150, message = "O nome deve ter entre 3 e 150 caracteres")
 	private String nome;
-	@Column
+	@Column(length=15)
+	@Size(min=10, max=15, message = "O telefone deve ser entre 10 e 15 caracteres")
 	private String telefone;
-	@Column
+	@Column(length=1)
+	@Pattern(regexp="(M|F)", message = "Sexo deve ser M ou F")
 	private String sexo;
 	
 	
